@@ -1,7 +1,8 @@
 import { Project } from './../../projects/project.model';
 import { ProjectsActionsTypes } from './projects.actions';
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
-const initialProjects: Project[] = [
+export const initialProjects: Project[] = [
   {
     id: '1',
     title: 'Project One',
@@ -34,41 +35,32 @@ const updateProject = (projects, project) => projects.map(p => {
 });
 const deleteProject = (projects, project) => projects.filter(w => project.id !== w.id);
 
-//01 Define the shape of my state
-export interface ProjectsState {
-  projects: Project[];
+//01 Define the shape of my state using the library Entity
+export interface ProjectsState extends EntityState<Project> {
   selectedProjectId: string | null;
-};
+}
 
-//02 Define the initial state
-export const initialState: ProjectsState = {
-  projects: initialProjects,
+//02 Create entity adapter
+export const adapter: EntityAdapter<Project> = createEntityAdapter<Project>();
+
+//03 Define the initial state
+export const initialState: ProjectsState = adapter.getInitialState({
   selectedProjectId: null
-};
+});
 
 //03 Build a reducer
 export function projectsReducers(state = initialState, action): ProjectsState {
   switch (action.type) {
     case ProjectsActionsTypes.ProjectSelected:
-      return {
-        selectedProjectId: state.selectedProjectId,
-        projects: createProject(state.projects, action.payload)
-      }    
+      return Object.assign({}, state, { selectedProjectId: action.payload });
+    case ProjectsActionsTypes.LoadProjects:
+      return adapter.addMany(action.payload, state);
     case ProjectsActionsTypes.AddProject:
-      return {
-        selectedProjectId: action.payload,
-        projects: state.projects
-      }
+      return adapter.addOne(action.payload, state);
     case ProjectsActionsTypes.UpdateProject:
-      return {
-        selectedProjectId: state.selectedProjectId,
-        projects: updateProject(state.projects, action.payload)
-      }
+      return adapter.updateOne(action.payload, state);
     case ProjectsActionsTypes.DeleteProject:
-      return {
-        selectedProjectId: state.selectedProjectId,
-        projects: deleteProject(state.projects, action.payload)
-      }
+      return adapter.removeOne(action.payload, state);
     default:
       return state;
   };
