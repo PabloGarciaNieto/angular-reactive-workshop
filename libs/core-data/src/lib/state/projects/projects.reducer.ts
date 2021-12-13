@@ -1,4 +1,5 @@
 import { Project } from './../../projects/project.model';
+import { ProjectsActionsTypes } from './projects.actions';
 
 const initialProjects: Project[] = [
   {
@@ -45,25 +46,25 @@ export const initialState: ProjectsState = {
   selectedProjectId: null
 };
 
-//03 Build a simple reducer
+//03 Build a reducer
 export function projectsReducers(state = initialState, action): ProjectsState {
   switch (action.type) {
-    case 'select':
+    case ProjectsActionsTypes.ProjectSelected:
       return {
         selectedProjectId: state.selectedProjectId,
         projects: createProject(state.projects, action.payload)
       }    
-    case 'create':
+    case ProjectsActionsTypes.AddProject:
       return {
         selectedProjectId: action.payload,
         projects: state.projects
       }
-    case 'update':
+    case ProjectsActionsTypes.UpdateProject:
       return {
         selectedProjectId: state.selectedProjectId,
         projects: updateProject(state.projects, action.payload)
       }
-    case 'delete':
+    case ProjectsActionsTypes.DeleteProject:
       return {
         selectedProjectId: state.selectedProjectId,
         projects: deleteProject(state.projects, action.payload)
