@@ -2,6 +2,7 @@ import { Project } from './../../projects/project.model';
 import { ProjectsActionsTypes } from './projects.actions';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
+
 export const initialProjects: Project[] = [
   {
     id: '1',
@@ -65,3 +66,12 @@ export function projectsReducers(state = initialState, action): ProjectsState {
       return state;
   };
 }
+
+//Selectors 
+export const getSelectedProjectId = (state: ProjectsState) => state.selectedProjectId;
+
+const { selectIds, selectEntities, selectAll } = adapter.getSelectors();
+
+export const selectProjectIds = selectIds;
+export const selectProjectEntities = selectEntities;
+export const selectAllProjects = selectAll;
