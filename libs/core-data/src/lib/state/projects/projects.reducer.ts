@@ -1,5 +1,5 @@
 import { Project } from './../../projects/project.model';
-import { ProjectsActionsTypes } from './projects.actions';
+import { ProjectsActionTypes } from './projects.actions';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
 
@@ -52,15 +52,15 @@ export const initialState: ProjectsState = adapter.getInitialState({
 //03 Build a reducer
 export function projectsReducers(state = initialState, action): ProjectsState {
   switch (action.type) {
-    case ProjectsActionsTypes.ProjectSelected:
+    case ProjectsActionTypes.ProjectSelected:
       return Object.assign({}, state, { selectedProjectId: action.payload });
-    case ProjectsActionsTypes.LoadProjects:
+    case ProjectsActionTypes.ProjectsLoaded:
       return adapter.addMany(action.payload, state);
-    case ProjectsActionsTypes.AddProject:
+    case ProjectsActionTypes.ProjectAdded:
       return adapter.addOne(action.payload, state);
-    case ProjectsActionsTypes.UpdateProject:
+    case ProjectsActionTypes.UpdateProject:
       return adapter.updateOne(action.payload, state);
-    case ProjectsActionsTypes.DeleteProject:
+    case ProjectsActionTypes.DeleteProject:
       return adapter.removeOne(action.payload, state);
     default:
       return state;
