@@ -1,17 +1,7 @@
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import { Customer, Project, ProjectsService, NotificationsService, CustomersService, ProjectsState, AddProject, UpdateProject, DeleteProject, initialProjects, LoadProjects, selectAllProjects } from '@workshop/core-data';
-
-
-const emptyProject: Project = {
-  id: null,
-  title: '',
-  details: '',
-  percentComplete: 0,
-  approved: false,
-  customerId: null
-}
+import { Customer, Project, ProjectsService, NotificationsService, CustomersService, ProjectsState, AddProject, UpdateProject, DeleteProject, initialProjects, LoadProjects, selectAllProjects, selectCurrentProject, SelectProject } from '@workshop/core-data';
 
 @Component({
   selector: 'app-projects',
@@ -21,7 +11,8 @@ const emptyProject: Project = {
 export class ProjectsComponent implements OnInit {
   projects$: Observable<Project[]>;
   customers$: Observable<Customer[]>;
-  currentProject: Project;
+  currentProject$: Observable<Project>;
+ 
 
   constructor(
     private projectsService: ProjectsService,
@@ -29,6 +20,7 @@ export class ProjectsComponent implements OnInit {
     private store: Store<ProjectsState>,
     private ns: NotificationsService) {
       this.projects$ = store.pipe(select(selectAllProjects));
+      this.currentProject$ = store.pipe(select(selectCurrentProject));
     }
 
   ngOnInit() {
@@ -38,11 +30,11 @@ export class ProjectsComponent implements OnInit {
   }
 
   resetCurrentProject() {
-    this.currentProject = emptyProject;
+    this.store.dispatch(new SelectProject(null));
   }
 
   selectProject(project) {
-    this.currentProject = project;
+    this.store.dispatch(new SelectProject(project.id));
   }
 
   cancel(project) {

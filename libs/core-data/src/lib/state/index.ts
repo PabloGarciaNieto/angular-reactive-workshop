@@ -1,4 +1,5 @@
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
+import { Project } from '@workshop/core-data';
 
 import * as fromCustomers from './customers/customers.reducer';
 import * as fromProjects from './projects/projects.reducer';
@@ -34,6 +35,28 @@ export const selectAllProjects = createSelector(
   fromProjects.selectAllProjects
 )
 
+const emptyProject: Project = {
+  id: null,
+  title: '',
+  details: '',
+  percentComplete: 0,
+  approved: false,
+  customerId: null
+}
+
+export const selectCurrentProjectId = createSelector(
+  selectProjectState,
+  fromProjects.getSelectedProjectId
+)
+
+export const selectCurrentProject = createSelector(
+  selectProjectEntities,
+  selectCurrentProjectId,
+  (projectEntities, projectId) => {
+    return projectId ? projectEntities[projectId] : emptyProject;
+  }
+)
+
 // -------------------------------------------------------------------
 // CUSTOMERS SELECTORS
 // -------------------------------------------------------------------
@@ -44,4 +67,16 @@ export const selectAllCustomers = createSelector(
   fromCustomers.selectAllCustomers
 );
 
+export const selectCustomersProjects = createSelector(
+  selectAllCustomers,
+  selectAllProjects,
+  (customers, projects) => {
+    return customers.map(customer => {
+      return Object.assign({}, {
+        ...customer,
+        projects: projects.filter(project => project.customerId === customer.id)
+      })
+    })
+  }
+);
 
