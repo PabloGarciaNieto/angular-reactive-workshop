@@ -101,12 +101,12 @@
       "customerId": "2"
     },
     {
-      "id": "emat-pd",
-      "title": "Second Project",
-      "details": "Hello world",
-      "percentComplete": 74,
-      "approved": true,
-      "customerId": "4"
+      "id": "UriBXsI",
+      "title": "DDDD",
+      "details": "ddd",
+      "percentComplete": 0,
+      "approved": false,
+      "customerId": null
     }
   ]
 }
